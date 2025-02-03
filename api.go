@@ -13,8 +13,6 @@ import (
 	"github.com/gorilla/mux"
 )
 
-var chatGPTApiKey string = "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"
-
 const apiEndpoint = "https://api.openai.com/v1/chat/completions"
 
 func (s *APIServer) Start(ctx context.Context) error {
