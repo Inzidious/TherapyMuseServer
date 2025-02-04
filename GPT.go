@@ -9,7 +9,7 @@ import (
 )
 
 func getGPT() {
-	apiKey := chatGPTApiKey
+	apiKey := "" //chatGPTApiKey
 	client := resty.New()
 	response, err := client.R().
 		SetAuthToken(apiKey).
