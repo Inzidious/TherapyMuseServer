@@ -38,9 +38,9 @@ type PageNode struct {
 
 func NewPageNode() *PageNode {
 	return &PageNode{
-		Title: "Shawn",
-		Topic: "McLean",
-		Body:  "sux",
+		Title: "",
+		Topic: "",
+		Body:  "",
 	}
 }
 
@@ -59,4 +59,5 @@ type HTMLParser struct {
 	c         *colly.Collector
 	pageNodes map[string]*PageNode
 	hit       int
+	imageHit  int
 }

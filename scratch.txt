@@ -1,27 +1,3 @@
-@State private var pageNodes:[PageNode]?
+sh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQDCS1/NuTAKT5VkJZAecT4ssbPg6pFfSplLboQnkEP$
 
-if(data.news.count > 0)
-+                        if(pageNodes != nil)
-                         {
--                            NewsView(title:data.news[0].title,
--                                     imageUrl: data.news[0].imageUrl,
--                                     siteName: data.news[0].newsSite,
--                                     summary: data.news[0].summary)
-+                            NewsView(title:pageNodes![0].title,
-+                                     imageUrl: "",
-+                                     siteName: pageNodes![0].topic,
-+                                     summary: pageNodes![0].body)
-                         }
-                         
-                         Spacer()
-@@ -90,7 +91,7 @@ struct ViewC: View
-                     {
-                         do
-                         {
--                            try await data.getData()
-+                            try await pageNodes = getPageNodes()
-                         }
-                         catch
-                         {}
-(END)
-
+git remote set-url origin git@github.com:Inzidious/TherapyMuseServer.git

@@ -16,13 +16,15 @@ import (
 const apiEndpoint = "https://api.openai.com/v1/chat/completions"
 
 func (s *APIServer) Start(ctx context.Context) error {
-	err := s.rdb.Ping(ctx).Err()
+	/*err := s.rdb.Ping(ctx).Err()
 
 	if err != nil {
 		return fmt.Errorf("failed to connect to redis")
-	}
+	}*/
 
-	fmt.Println("Redis server starting")
+	//fmt.Println("Redis server starting")
+
+	err := fmt.Errorf("")
 
 	ch := make(chan error, 1)
 
@@ -47,7 +49,7 @@ func (s *APIServer) Start(ctx context.Context) error {
 
 	go func() {
 		log.Println("JSON API server running on port: ", s.listenAddr)
-		err = server.ListenAndServe()
+		err := server.ListenAndServe()
 
 		if err != nil {
 			ch <- fmt.Errorf("failed to start server %w", err)
@@ -130,7 +132,7 @@ func (s *APIServer) handleGetNews(w http.ResponseWriter, r *http.Request) error 
 	values := make([]*PageNode, 0, len(s.newsParser.pageNodes))
 
 	for _, v := range s.newsParser.pageNodes {
-		//fmt.Println("Key: " + key + " Value: " + v.title)
+		fmt.Println(" Value: " + v.Title + ":" + v.Topic)
 		values = append(values, v)
 	}
 

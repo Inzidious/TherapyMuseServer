@@ -33,6 +33,43 @@ func (s *HTMLParser) BuildBody(h *colly.HTMLElement) {
 	}*/
 }
 
+func (s *HTMLParser) BuildImage(h *colly.HTMLElement) {
+	dom := h.DOM
+
+	childNodes := dom.Children().Nodes
+
+	firstDom := dom.FindNodes(childNodes[0])
+
+	secondChildNodes := firstDom.Children().Nodes
+
+	secondDom := firstDom.FindNodes(secondChildNodes[0])
+
+	imageSrc, imageExists := secondDom.Attr("src")
+
+	href, exists := firstDom.Attr("href")
+
+	//fmt.Println("im: ", s.imageHit)
+
+	if exists && imageExists && s.imageHit < 2 {
+		s.imageHit++
+		realHref := "https://www.psychologytoday.com" + href
+
+		if s.pageNodes[realHref] == nil {
+			s.pageNodes[realHref] = &PageNode{
+				Title: "",
+				Topic: imageSrc,
+				Body:  "",
+			}
+
+			fmt.Println("Image Adding new object: ", s.pageNodes[realHref].Topic)
+
+		} else {
+			fmt.Println("Image editing new field: ", s.pageNodes[realHref].Topic)
+			s.pageNodes[realHref].Topic = imageSrc
+		}
+	}
+}
+
 func (s *HTMLParser) BuildNode(h *colly.HTMLElement) {
 	dom := h.DOM
 	childNodes := dom.Children().Nodes
@@ -40,7 +77,7 @@ func (s *HTMLParser) BuildNode(h *colly.HTMLElement) {
 	secondDom := dom.FindNodes(childNodes[1])
 	thirdDom := secondDom.FindNodes(secondDom.Children().Nodes[0])
 
-	fourthDom := dom.FindNodes(childNodes[3])
+	//fourthDom := dom.FindNodes(childNodes[3])
 
 	href, exists := thirdDom.Attr("href")
 
@@ -48,7 +85,19 @@ func (s *HTMLParser) BuildNode(h *colly.HTMLElement) {
 		s.hit++
 		realHref := "https://www.psychologytoday.com" + href
 		//fmt.Println("node href: ", realHref)
-		s.pageNodes[realHref] = &PageNode{Title: secondDom.Text(), Topic: fourthDom.Text()}
+
+		if s.pageNodes[realHref] == nil {
+			s.pageNodes[realHref] = &PageNode{
+				Title: secondDom.Text(),
+				Topic: "",
+				Body:  "",
+			}
+
+			fmt.Println("Title Adding new object: ", s.pageNodes[realHref].Title)
+		} else {
+			s.pageNodes[realHref].Title = secondDom.Text()
+			fmt.Println("Title editing: ", s.pageNodes[realHref].Title)
+		}
 
 		c := colly.NewCollector()
 
@@ -79,6 +128,7 @@ func (s *HTMLParser) Collect() {
 		fmt.Printf("Visiting %s\n", r.URL)
 	})
 
+	s.c.OnHTML("div.teaser-lg__image", s.BuildImage)
 	s.c.OnHTML("div.teaser-lg__details", s.BuildNode)
 	s.c.Visit(s.url)
 
